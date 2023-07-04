@@ -46,6 +46,16 @@ public class BoardController : MonoBehaviour
         Fill();
     }
 
+    public void RestartCells()
+    {
+        StartCoroutine(RefillBoardCoroutine());
+    }
+
+    public void SetRestartParam()
+    {
+        m_gameOver = false;
+    }
+
     private void Fill()
     {
         m_board.Fill();

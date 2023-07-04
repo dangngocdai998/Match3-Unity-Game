@@ -118,4 +118,10 @@ public class UIMainManager : MonoBehaviour
     {
         m_gameManager.SetState(GameManager.eStateGame.GAME_STARTED);
     }
+
+    public void RestartGame()
+    {
+        m_gameManager.Restart();
+    }
+
 }

@@ -44,6 +44,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIMainManager m_uiMenu;
 
     private LevelCondition m_levelCondition;
+
+    private eLevelMode currentMode;
+
     [Header("Config Skin Type")]
     [SerializeField] eTypeSkinItem typeSkinItem = eTypeSkinItem.FISH;
 
@@ -107,6 +110,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadLevel(eLevelMode mode)
     {
+        currentMode = mode;
         //
         m_boardController = new GameObject("BoardController").AddComponent<BoardController>();
         m_boardController.StartGame(this, m_gameSettings);
@@ -125,6 +129,35 @@ public class GameManager : MonoBehaviour
         m_levelCondition.ConditionCompleteEvent += GameOver;
 
         State = eStateGame.GAME_STARTED;
+    }
+
+    public void Restart()
+    {
+        m_boardController.RestartCells();
+
+        if (currentMode == eLevelMode.MOVES)
+        {
+            if (m_levelCondition == null)
+            {
+                m_levelCondition = this.gameObject.AddComponent<LevelMoves>();
+                m_levelCondition.ConditionCompleteEvent += GameOver;
+            }
+            m_levelCondition.Setup(m_gameSettings.LevelMoves, m_uiMenu.GetLevelConditionView(), m_boardController);
+        }
+        else if (currentMode == eLevelMode.TIMER)
+        {
+            if (m_levelCondition == null)
+            {
+                m_levelCondition = this.gameObject.AddComponent<LevelTime>();
+                m_levelCondition.ConditionCompleteEvent += GameOver;
+            }
+
+            m_levelCondition.Setup(m_gameSettings.LevelTime, m_uiMenu.GetLevelConditionView(), this);//
+        }
+
+
+        State = eStateGame.GAME_STARTED;
+        m_boardController.SetRestartParam();
     }
 
     public void GameOver()
