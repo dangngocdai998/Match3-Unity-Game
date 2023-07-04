@@ -103,13 +103,14 @@ public class Item
     {
         if (View)
         {
-            View.transform.DOScale(0.1f, 0.1f).OnComplete(
-                () =>
-                {
-                    GameObject.Destroy(View.gameObject);
-                    View = null;
-                }
-                );
+            View.Explode();
+            View = null;
+            // View.transform.DOScale(0.1f, 0.1f).OnComplete(
+            //     () =>
+            //     {
+
+            //     }
+            //     );
         }
     }
 

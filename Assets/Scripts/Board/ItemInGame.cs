@@ -6,6 +6,8 @@ public class ItemInGame : MonoBehaviour
 {
     [SerializeField] SpriteRenderer spriteRenderer;
 
+    [SerializeField] Rigidbody2D rb2;
+
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -25,5 +27,19 @@ public class ItemInGame : MonoBehaviour
     public void SetSortingLayer(int value)
     {
         spriteRenderer.sortingOrder = value;
+    }
+
+    public void Explode()
+    {
+        rb2.bodyType = RigidbodyType2D.Dynamic;
+        rb2.AddForce(new Vector2(Random.Range(-0.5f, 0.5f), 1) * Random.Range(3f, 9f), ForceMode2D.Impulse);
+        rb2.AddTorque(Random.Range(-30f, 30f));
+
+        Invoke("DestroyItem", 3);
+    }
+
+    void DestroyItem()
+    {
+        GameObject.Destroy(this.gameObject);
     }
 }

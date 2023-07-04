@@ -23,7 +23,7 @@ public class BoardController : MonoBehaviour
 
     private GameSettings m_gameSettings;
 
-    private List<Cell> m_potentialMatch;
+    [SerializeField] private List<Cell> m_potentialMatch;
 
     private float m_timeAfterFill;
 
@@ -224,7 +224,7 @@ public class BoardController : MonoBehaviour
             matches[i].ExplodeItem();
         }
 
-        if(matches.Count > m_gameSettings.MatchesMin)
+        if (matches.Count > m_gameSettings.MatchesMin)
         {
             m_board.ConvertNormalToBonus(matches, cellEnd);
         }
