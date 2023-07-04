@@ -44,7 +44,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIMainManager m_uiMenu;
 
     private LevelCondition m_levelCondition;
+    [Header("Config Skin Type")]
+    [SerializeField] eTypeSkinItem typeSkinItem = eTypeSkinItem.FISH;
 
+    public static eTypeSkinItem static_typeSkinItem = eTypeSkinItem.FISH;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -69,7 +72,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         State = eStateGame.SETUP;
-
+        static_typeSkinItem = typeSkinItem;
         // m_gameSettings = Resources.Load<GameSettings>(Constants.GAME_SETTINGS_PATH);
 
         // m_uiMenu = FindObjectOfType<UIMainManager>();

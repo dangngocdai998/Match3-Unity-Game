@@ -9,7 +9,7 @@ public class Item
 {
     public Cell Cell { get; private set; }
 
-    public Transform View { get; private set; }
+    public ItemInGame View { get; private set; }
 
 
     public virtual void SetView()
@@ -21,9 +21,14 @@ public class Item
             GameObject prefab = Resources.Load<GameObject>(prefabname);
             if (prefab)
             {
-                View = GameObject.Instantiate(prefab).transform;
+                View = GameObject.Instantiate(prefab).GetComponent<ItemInGame>();
             }
         }
+    }
+
+    public virtual void SetView(ItemInGame _Item)
+    {
+        View = _Item;
     }
 
     protected virtual string GetPrefabName() { return string.Empty; }
@@ -37,14 +42,14 @@ public class Item
     {
         if (View == null) return;
 
-        View.DOMove(Cell.transform.position, 0.2f);
+        View.transform.DOMove(Cell.transform.position, 0.2f);
     }
 
     public void SetViewPosition(Vector3 pos)
     {
         if (View)
         {
-            View.position = pos;
+            View.transform.position = pos;
         }
     }
 
@@ -52,7 +57,7 @@ public class Item
     {
         if (View)
         {
-            View.SetParent(root);
+            View.transform.SetParent(root);
         }
     }
 
@@ -60,11 +65,11 @@ public class Item
     {
         if (View == null) return;
 
-        SpriteRenderer sp = View.GetComponent<SpriteRenderer>();
-        if (sp)
-        {
-            sp.sortingOrder = 1;
-        }
+        // SpriteRenderer sp = View.GetComponent<SpriteRenderer>();
+        // if (sp)
+        // {
+        View.SetSortingLayer(1);
+        // }
     }
 
 
@@ -72,11 +77,11 @@ public class Item
     {
         if (View == null) return;
 
-        SpriteRenderer sp = View.GetComponent<SpriteRenderer>();
-        if (sp)
-        {
-            sp.sortingOrder = 0;
-        }
+        // SpriteRenderer sp = View.GetComponent<SpriteRenderer>();
+        // if (sp)
+        // {
+        View.SetSortingLayer(0);
+        // }
 
     }
 
@@ -84,9 +89,9 @@ public class Item
     {
         if (View == null) return;
 
-        Vector3 scale = View.localScale;
-        View.localScale = Vector3.one * 0.1f;
-        View.DOScale(scale, 0.1f);
+        Vector3 scale = View.transform.localScale;
+        View.transform.localScale = Vector3.one * 0.1f;
+        View.transform.DOScale(scale, 0.1f);
     }
 
     internal virtual bool IsSameType(Item other)
@@ -98,7 +103,7 @@ public class Item
     {
         if (View)
         {
-            View.DOScale(0.1f, 0.1f).OnComplete(
+            View.transform.DOScale(0.1f, 0.1f).OnComplete(
                 () =>
                 {
                     GameObject.Destroy(View.gameObject);
@@ -114,7 +119,7 @@ public class Item
     {
         if (View)
         {
-            View.DOPunchScale(View.localScale * 0.1f, 0.1f).SetLoops(-1);
+            View.transform.DOPunchScale(View.transform.localScale * 0.1f, 0.1f).SetLoops(-1);
         }
     }
 
@@ -122,7 +127,7 @@ public class Item
     {
         if (View)
         {
-            View.DOKill();
+            View.transform.DOKill();
         }
     }
 

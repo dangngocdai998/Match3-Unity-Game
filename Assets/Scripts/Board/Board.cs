@@ -178,8 +178,8 @@ public class Board
         cell2.Free();
         cell2.Assign(item);
 
-        item.View.DOMove(cell2.transform.position, 0.3f);
-        item2.View.DOMove(cell1.transform.position, 0.3f).OnComplete(() => { if (callback != null) callback(); });
+        item.View.transform.DOMove(cell2.transform.position, 0.3f);
+        item2.View.transform.DOMove(cell1.transform.position, 0.3f).OnComplete(() => { if (callback != null) callback(); });
     }
 
     public List<Cell> GetHorizontalMatches(Cell cell)
@@ -350,7 +350,7 @@ public class Board
         var dir = GetMatchDirection(matches);
 
         var bonus = matches.Where(x => x.Item is BonusItem).FirstOrDefault();
-        if(bonus == null)
+        if (bonus == null)
         {
             return matches;
         }
@@ -655,7 +655,7 @@ public class Board
                 cell.Free();
 
                 holder.Assign(item);
-                item.View.DOMove(holder.transform.position, 0.3f);
+                item.View.transform.DOMove(holder.transform.position, 0.3f);
             }
         }
     }
