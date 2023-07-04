@@ -23,7 +23,7 @@ public class BoardController : MonoBehaviour
 
     private GameSettings m_gameSettings;
 
-    private List<Cell> m_potentialMatch;
+    [SerializeField] private List<Cell> m_potentialMatch;
 
     private float m_timeAfterFill;
 
@@ -44,6 +44,16 @@ public class BoardController : MonoBehaviour
         m_board = new Board(this.transform, gameSettings);
 
         Fill();
+    }
+
+    public void RestartCells()
+    {
+        StartCoroutine(RefillBoardCoroutine());
+    }
+
+    public void SetRestartParam()
+    {
+        m_gameOver = false;
     }
 
     private void Fill()
@@ -224,7 +234,7 @@ public class BoardController : MonoBehaviour
             matches[i].ExplodeItem();
         }
 
-        if(matches.Count > m_gameSettings.MatchesMin)
+        if (matches.Count > m_gameSettings.MatchesMin)
         {
             m_board.ConvertNormalToBonus(matches, cellEnd);
         }

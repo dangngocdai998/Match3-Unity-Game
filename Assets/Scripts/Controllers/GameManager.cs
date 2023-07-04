@@ -36,22 +36,49 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private GameSettings m_gameSettings;
+    [SerializeField] private GameSettings m_gameSettings;
 
 
     private BoardController m_boardController;
 
-    private UIMainManager m_uiMenu;
+    [SerializeField] private UIMainManager m_uiMenu;
 
     private LevelCondition m_levelCondition;
+
+    private eLevelMode currentMode;
+
+    [Header("Config Skin Type")]
+    [SerializeField] eTypeSkinItem typeSkinItem = eTypeSkinItem.FISH;
+
+    public static eTypeSkinItem static_typeSkinItem = eTypeSkinItem.FISH;
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (!m_uiMenu)
+        {
+            m_uiMenu = FindObjectOfType<UIMainManager>();
+            if (!m_uiMenu)
+                Debug.LogError("UIMainManager not found in Scene!!!!");
+        }
+
+        if (!m_gameSettings)
+        {
+            m_gameSettings = Resources.Load<GameSettings>(Constants.GAME_SETTINGS_PATH);
+            if (!m_gameSettings)
+                Debug.LogError("GameSettings not found in Rescources!!!!");
+        }
+    }
+#endif
+
 
     private void Awake()
     {
         State = eStateGame.SETUP;
+        static_typeSkinItem = typeSkinItem;
+        // m_gameSettings = Resources.Load<GameSettings>(Constants.GAME_SETTINGS_PATH);
 
-        m_gameSettings = Resources.Load<GameSettings>(Constants.GAME_SETTINGS_PATH);
-
-        m_uiMenu = FindObjectOfType<UIMainManager>();
+        // m_uiMenu = FindObjectOfType<UIMainManager>();
         m_uiMenu.Setup(this);
     }
 
@@ -61,17 +88,17 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (m_boardController != null) m_boardController.Update();
-    }
+    // void Update()
+    // {
+    //     if (m_boardController != null) m_boardController.Update();//??
+    // }
 
 
     internal void SetState(eStateGame state)
     {
         State = state;
 
-        if(State == eStateGame.PAUSE)
+        if (State == eStateGame.PAUSE)
         {
             DOTween.PauseAll();
         }
@@ -83,6 +110,8 @@ public class GameManager : MonoBehaviour
 
     public void LoadLevel(eLevelMode mode)
     {
+        currentMode = mode;
+        //
         m_boardController = new GameObject("BoardController").AddComponent<BoardController>();
         m_boardController.StartGame(this, m_gameSettings);
 
@@ -94,12 +123,41 @@ public class GameManager : MonoBehaviour
         else if (mode == eLevelMode.TIMER)
         {
             m_levelCondition = this.gameObject.AddComponent<LevelTime>();
-            m_levelCondition.Setup(m_gameSettings.LevelMoves, m_uiMenu.GetLevelConditionView(), this);
+            m_levelCondition.Setup(m_gameSettings.LevelTime, m_uiMenu.GetLevelConditionView(), this);//
         }
 
         m_levelCondition.ConditionCompleteEvent += GameOver;
 
         State = eStateGame.GAME_STARTED;
+    }
+
+    public void Restart()
+    {
+        m_boardController.RestartCells();
+
+        if (currentMode == eLevelMode.MOVES)
+        {
+            if (m_levelCondition == null)
+            {
+                m_levelCondition = this.gameObject.AddComponent<LevelMoves>();
+                m_levelCondition.ConditionCompleteEvent += GameOver;
+            }
+            m_levelCondition.Setup(m_gameSettings.LevelMoves, m_uiMenu.GetLevelConditionView(), m_boardController);
+        }
+        else if (currentMode == eLevelMode.TIMER)
+        {
+            if (m_levelCondition == null)
+            {
+                m_levelCondition = this.gameObject.AddComponent<LevelTime>();
+                m_levelCondition.ConditionCompleteEvent += GameOver;
+            }
+
+            m_levelCondition.Setup(m_gameSettings.LevelTime, m_uiMenu.GetLevelConditionView(), this);//
+        }
+
+
+        State = eStateGame.GAME_STARTED;
+        m_boardController.SetRestartParam();
     }
 
     public void GameOver()

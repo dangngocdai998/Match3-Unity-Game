@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38477d2c3efe6d948ae0713b3a89a0f0, type: 3}
-  m_Name: gamesettings
+  m_Script: {fileID: 11500000, guid: 05aeba356c25ff949bb306a0a23d2330, type: 3}
+  m_Name: SkinItem_5
   m_EditorClassIdentifier: 
-  BoardSizeX: 5
-  BoardSizeY: 7
-  MatchesMin: 3
-  LevelMoves: 16
-  LevelTime: 20
-  TimeForHint: 5
+  sprite_SkinNormal: {fileID: 21300000, guid: 4aade970bd310bf41999ff1d6929698d, type: 3}
+  sprite_SkinFish: {fileID: 21300000, guid: 23d4fceb15264594fbd2e61365bdeac4, type: 3}
